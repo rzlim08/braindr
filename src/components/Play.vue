@@ -19,7 +19,7 @@
               <progressive-img class="user-card__picture mx-auto" :src="currentImage"
               v-hammer:swipe.horizontal="onSwipe"
               placeholder="https://unsplash.it/500"
-              :aspect-ratio="1"
+              :aspect-ratio="0.63"
               >
               </progressive-img>
             </div>
@@ -75,7 +75,7 @@
   }
 
   .user-card {
-      max-width: 500px;
+      max-width: 900px;
       height: fit-content;
       width: 100%;
       border: 1px solid #ccc;
@@ -95,6 +95,9 @@
   .image_area {
     background: black;
     position: relative;
+  }
+  .progressive-image-wrapper {
+    padding-bottom: 63%;
   }
 
   .loader {
@@ -240,7 +243,7 @@
           pic: 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', // this is a blank gray base64
         },
         prevImage: null,
-        imageBaseUrl: 'https://s3.us-east-1.amazonaws.com/fcp-indi/data/Projects/RocklandSample/Outputs/qc_images',
+        imageBaseUrl: 'https://s3.us-east-1.amazonaws.com/fcp-indi/data/Projects/RocklandSample/Outputs/testset',
         currentIndex: null,
         imageCount: [],
         preloaded: null,
@@ -358,7 +361,7 @@
         // set the image count
         this.$firebaseRefs.imageCount
             .child(this.currentCount['.key'])
-            .set({
+            .update({
               ave_score: score.ave,
               num_votes: score.size,
             });
@@ -462,7 +465,7 @@
         // set the image count
         this.$firebaseRefs.imageCount
             .child(this.currentCount['.key'])
-            .set({
+            .update({
               ave_score: score.ave,
               num_votes: score.size,
             });
