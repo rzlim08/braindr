@@ -350,10 +350,10 @@
         return { score: 1, ave: newAve, size: size + 1 };
       },
       swipeLeft() {
-        console.log(this.currentCount['.key']);
         this.status = 'loading';
         this.setSwipe('swipe-left');
         const score = this.getUntrustedScore(this.currentCount, 0);
+        let key = this.currentCount['.key']
         this.showAlert();
         // set the user score
         db.ref('users').child(this.userInfo.displayName)
@@ -366,21 +366,21 @@
               num_votes: score.size,
             });
         // send the actual vote
-        this.sendVote(0).then(()=>{
+        this.sendVote(0, key).then(()=>{
           console.log('sent vote')
         });
 
         this.setCurrentImage();
 
       },
-      sendVote(vote) {
+      sendVote(vote, key) {
         //console.log('this startTime', this.startTime);
         return db.ref('votes').push({
           username: this.userInfo.displayName,
           time: new Date() - this.startTime,
-          vote,
-          point: this.pointsAward,
-          image_id: this.currentCount['.key'],
+          vote:vote,
+          point: this.score.variant,
+          image_id: key,
         });
 
          /* this.$firebaseRefs.imageCount
@@ -458,6 +458,7 @@
         this.status = 'loading';
         this.setSwipe('swipe-right');
         const score = this.getUntrustedScore(this.currentCount, 1);
+        let key = this.currentCount['.key']
         this.showAlert();
         // set the user score
         db.ref('users').child(this.userInfo.displayName)
@@ -470,7 +471,7 @@
               num_votes: score.size,
             });
 
-        this.sendVote(1).then(()=>{
+        this.sendVote(1, key).then(()=>{
           console.log('sent vote')
         });
 
