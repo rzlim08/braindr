@@ -113,7 +113,7 @@
               <progressive-img class="user-card__picture mx-auto" :src="currentImage.pic"
               v-hammer:swipe.horizontal="onSwipe"
               placeholder="https://unsplash.it/500"
-              :aspect-ratio="1"
+              :aspect-ratio="0.6"
               >
               </progressive-img>
             </div>
@@ -144,7 +144,7 @@
 <style>
 /*https://github.com/pudymody/tinderSwipe/blob/gh-pages/style.css*/
 .user-card {
-    max-width: 500px;
+    max-width: 900px;
     height: fit-content;
     width: 100%;
     border: 1px solid #ccc;
@@ -287,7 +287,7 @@ export default {
   data() {
     return {
       imgCounts: [],
-      imageBaseUrl: 'https://s3.us-east-1.amazonaws.com/fcp-indi/data/Projects/RocklandSample/Outputs/qc_images',
+      imageBaseUrl: 'https://s3.us-east-1.amazonaws.com/fcp-indi/data/Projects/RocklandSample/Outputs/testset',
       currentType: null,
       currentImage: null,
       startTime: 0,
