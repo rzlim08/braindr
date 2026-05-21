@@ -19,7 +19,7 @@
               <progressive-img class="user-card__picture mx-auto" :src="currentImage"
               v-hammer:swipe.horizontal="onSwipe"
               placeholder="https://unsplash.it/500"
-              :aspect-ratio="1"
+              :aspect-ratio="0.63"
               >
               </progressive-img>
             </div>
@@ -75,7 +75,7 @@
   }
 
   .user-card {
-      max-width: 500px;
+      max-width: 900px;
       height: fit-content;
       width: 100%;
       border: 1px solid #ccc;
@@ -95,6 +95,9 @@
   .image_area {
     background: black;
     position: relative;
+  }
+  .progressive-image-wrapper {
+    padding-bottom: 63%;
   }
 
   .loader {
@@ -240,7 +243,7 @@
           pic: 'data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', // this is a blank gray base64
         },
         prevImage: null,
-        imageBaseUrl: 'https://s3.us-east-1.amazonaws.com/fcp-indi/data/Projects/RocklandSample/Outputs/qc_images',
+        imageBaseUrl: 'https://s3.us-east-1.amazonaws.com/fcp-indi/data/Projects/RocklandSample/Outputs/testset',
         currentIndex: null,
         imageCount: [],
         preloaded: null,
@@ -347,10 +350,10 @@
         return { score: 1, ave: newAve, size: size + 1 };
       },
       swipeLeft() {
-        console.log(this.currentCount['.key']);
         this.status = 'loading';
         this.setSwipe('swipe-left');
         const score = this.getUntrustedScore(this.currentCount, 0);
+        let key = this.currentCount['.key']
         this.showAlert();
         // set the user score
         db.ref('users').child(this.userInfo.displayName)
@@ -358,26 +361,26 @@
         // set the image count
         this.$firebaseRefs.imageCount
             .child(this.currentCount['.key'])
-            .set({
+            .update({
               ave_score: score.ave,
               num_votes: score.size,
             });
         // send the actual vote
-        this.sendVote(0).then(()=>{
+        this.sendVote(0, key).then(()=>{
           console.log('sent vote')
         });
 
         this.setCurrentImage();
 
       },
-      sendVote(vote) {
+      sendVote(vote, key) {
         //console.log('this startTime', this.startTime);
         return db.ref('votes').push({
           username: this.userInfo.displayName,
           time: new Date() - this.startTime,
-          vote,
-          point: this.pointsAward,
-          image_id: this.currentCount['.key'],
+          vote:vote,
+          point: this.score.variant,
+          image_id: key,
         });
 
          /* this.$firebaseRefs.imageCount
@@ -455,6 +458,7 @@
         this.status = 'loading';
         this.setSwipe('swipe-right');
         const score = this.getUntrustedScore(this.currentCount, 1);
+        let key = this.currentCount['.key']
         this.showAlert();
         // set the user score
         db.ref('users').child(this.userInfo.displayName)
@@ -462,12 +466,12 @@
         // set the image count
         this.$firebaseRefs.imageCount
             .child(this.currentCount['.key'])
-            .set({
+            .update({
               ave_score: score.ave,
               num_votes: score.size,
             });
 
-        this.sendVote(1).then(()=>{
+        this.sendVote(1, key).then(()=>{
           console.log('sent vote')
         });
 
